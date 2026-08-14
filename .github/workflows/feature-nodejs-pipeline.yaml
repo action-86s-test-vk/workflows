@@ -11,6 +11,10 @@ on:
       environment:
         required: true 
         type: string 
+
+env:
+  ACC_ID: 167819473967
+
 jobs:
   feature-nodejs-pipeline:
     runs-on: self-hosted 
@@ -30,3 +34,14 @@ jobs:
         run: |
           echo ${{ inputs.project}}
           echo "version: ${APP_VERSION}"
+
+      - name: install dependencies 
+        run: npm install 
+
+      - name: run unit tests 
+        run: echo "run unit tests"
+
+      - name: docker build 
+        run: |
+          docker build -t ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${APP_VERSION} .
+          docker images 
