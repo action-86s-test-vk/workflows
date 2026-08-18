@@ -11,7 +11,7 @@ inputs:
   context:
     description: "Status check context name"
     required: true 
-  descripton:
+  description:
     description: "Optional description for the status"
     required: false 
     default: ""
