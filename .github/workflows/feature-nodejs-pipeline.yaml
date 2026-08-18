@@ -39,7 +39,17 @@ jobs:
         run: npm install 
 
       - name: run unit tests 
+        id: unit_tests
         run: echo "run unit tests"
+
+      - name: Update commit status 
+        if: always() 
+        uses: action-86s-test-vk/workflows/.github/actions/update-commit-status@main 
+        with: 
+          sha: ${{ github.sha }}
+          state: ${{ steps.unit_tests.outcome }}  # success / failure / cancelled 
+          context: UNIT_TESTS 
+          description: "${{ job.status }}"
 
       - name: docker build 
         run: |
