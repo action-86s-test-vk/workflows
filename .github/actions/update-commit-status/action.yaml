@@ -22,7 +22,7 @@ runs:
     - name: Update commit status 
       shell: bash 
       run: |
-        curl: -X POST \
+        curl -X POST \
           -H "Authorization: Bearer ${{ github.token }}" \
           -H "Content-Type: application/json" \
           --data "{
