@@ -66,8 +66,8 @@ jobs:
           context: DOCKER_BUILD 
           description: ${{ steps.docker_build.outcome }}
 
-      - name: Setup Trivy
-        uses: aquasecurity/setup-trivy@v0.2.6
+        # - name: Setup Trivy
+        #   uses: aquasecurity/setup-trivy@v0.2.6
 
       - name: Security Check 
         id: security_check 
