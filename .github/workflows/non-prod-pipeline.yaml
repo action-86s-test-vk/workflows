@@ -20,7 +20,7 @@ jobs:
         run: |
           SHORT_SHA=${{ inputs.version }}
           SHORT_SHA=${SHORT_SHA:0:9}
-          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_ENV
           echo "Short commit: $SHORT_SHA"
       
       - name: Check required commit statuses 
@@ -64,3 +64,24 @@ jobs:
             fi 
 
             echo "All required checks will be passed" 
+      
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          aws-region: us-east-1 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: authenticate to EKS 
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name roboshop-dev 
+          kubectl get nodes 
+      
+      - name: checkout catalogue deploy repo 
+        uses: actions/checkout@v6 
+        with:
+          respository: action-86s-test-vk/catalogue-deploy
+
+      - name: deploy to ${{ inputs.environment }} cluster
+        id: uat_deploy 
+        run: "helm upgrade --install catalogue -f values-dev.yaml -n roboshop --set deployment.imageVersion=${APP_VERSION} --atomic --wait --timeout=5m ."
